@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @SpireInitializer
 public class FightPredictor implements
     PostInitializeSubscriber,
-    OnStartBattleSubscriber,
+    // OnStartBattleSubscriber,
     EditStringsSubscriber
 {
     public static final Logger logger = LogManager.getLogger(FightPredictor.class.getName());
@@ -142,58 +142,58 @@ public class FightPredictor implements
     }
 
 
-    @Override
-    public void receiveOnBattleStart(AbstractRoom abstractRoom) {
-        float prediction = model.predict(ModelUtils.getBaseInputVector());
-        float intPrediction = Math.round(prediction * 100);
-        logger.info("Expected health loss: " + intPrediction);
-        CombatPredictionPatches.combatStartingHP = AbstractDungeon.player.currentHealth;
-        CombatPredictionPatches.combatHPLossPrediction = MathUtils.round(prediction * 100);
+    // @Override
+    // public void receiveOnBattleStart(AbstractRoom abstractRoom) {
+    //     float prediction = model.predict(ModelUtils.getBaseInputVector());
+    //     float intPrediction = Math.round(prediction * 100);
+    //     logger.info("Expected health loss: " + intPrediction);
+    //     CombatPredictionPatches.combatStartingHP = AbstractDungeon.player.currentHealth;
+    //     CombatPredictionPatches.combatHPLossPrediction = MathUtils.round(prediction * 100);
 
-        // Set up and do all card copying here
-        // Only use thread safe things inside the other thread (maybe convert as much stuff to strings as possible)
-        // That might mean overloading other methods from other classes to take strings, since they use them under
-        // the hood anyways
+    //     // Set up and do all card copying here
+    //     // Only use thread safe things inside the other thread (maybe convert as much stuff to strings as possible)
+    //     // That might mean overloading other methods from other classes to take strings, since they use them under
+    //     // the hood anyways
 
-        long start = System.currentTimeMillis();
+    //     long start = System.currentTimeMillis();
 
-        // Get the character's card pool
-        ArrayList<AbstractCard> unupgradedCards = new ArrayList<>();
-        switch (AbstractDungeon.player.chosenClass) {
-            case IRONCLAD: CardLibrary.addRedCards(unupgradedCards); break;
-            case THE_SILENT: CardLibrary.addGreenCards(unupgradedCards); break;
-            case DEFECT: CardLibrary.addBlueCards(unupgradedCards); break;
-            case WATCHER: CardLibrary.addPurpleCards(unupgradedCards); break;
-            default: return;
-        }
+    //     // Get the character's card pool
+    //     ArrayList<AbstractCard> unupgradedCards = new ArrayList<>();
+    //     switch (AbstractDungeon.player.chosenClass) {
+    //         case IRONCLAD: CardLibrary.addRedCards(unupgradedCards); break;
+    //         case THE_SILENT: CardLibrary.addGreenCards(unupgradedCards); break;
+    //         case DEFECT: CardLibrary.addBlueCards(unupgradedCards); break;
+    //         case WATCHER: CardLibrary.addPurpleCards(unupgradedCards); break;
+    //         default: return;
+    //     }
 
-        // Make copies of cards to protect from concurency problems
-        // Add the upgraded cards to the pool
-        List<AbstractCard> cardPool = unupgradedCards.stream().map(AbstractCard::makeCopy).collect(Collectors.toList());
-        List<AbstractCard> upgradedPool = cardPool.stream().map(AbstractCard::makeCopy).collect(Collectors.toList());;
-        upgradedPool.forEach(AbstractCard::upgrade);
-        cardPool.addAll(upgradedPool);
+    //     // Make copies of cards to protect from concurency problems
+    //     // Add the upgraded cards to the pool
+    //     List<AbstractCard> cardPool = unupgradedCards.stream().map(AbstractCard::makeCopy).collect(Collectors.toList());
+    //     List<AbstractCard> upgradedPool = cardPool.stream().map(AbstractCard::makeCopy).collect(Collectors.toList());;
+    //     upgradedPool.forEach(AbstractCard::upgrade);
+    //     cardPool.addAll(upgradedPool);
 
-        List<AbstractCard> playerCards = new ArrayList<>(AbstractDungeon.player.masterDeck.group).stream().map(AbstractCard::makeCopy).collect(Collectors.toList());
-        List<AbstractRelic> playerRelics = new ArrayList<>(AbstractDungeon.player.relics).stream().map(AbstractRelic::makeCopy).collect(Collectors.toList());
-        int startingHealth = AbstractDungeon.player.currentHealth;
-        int maxHealth = AbstractDungeon.player.maxHealth;
+    //     List<AbstractCard> playerCards = new ArrayList<>(AbstractDungeon.player.masterDeck.group).stream().map(AbstractCard::makeCopy).collect(Collectors.toList());
+    //     List<AbstractRelic> playerRelics = new ArrayList<>(AbstractDungeon.player.relics).stream().map(AbstractRelic::makeCopy).collect(Collectors.toList());
+    //     int startingHealth = AbstractDungeon.player.currentHealth;
+    //     int maxHealth = AbstractDungeon.player.maxHealth;
 
-        // Get the enemies to predict against
-        Set<String> elitesAndBosses = new HashSet<>();
-        elitesAndBosses.addAll(BaseGameConstants.eliteIDs.get(AbstractDungeon.actNum));
-        elitesAndBosses.add(AbstractDungeon.bossKey);
-        if (AbstractDungeon.actNum < 4) {
-            elitesAndBosses.addAll(BaseGameConstants.elitesAndBossesByAct.get(AbstractDungeon.actNum + 1));
-        }
-        long end = System.currentTimeMillis();
+    //     // Get the enemies to predict against
+    //     Set<String> elitesAndBosses = new HashSet<>();
+    //     elitesAndBosses.addAll(BaseGameConstants.eliteIDs.get(AbstractDungeon.actNum));
+    //     elitesAndBosses.add(AbstractDungeon.bossKey);
+    //     if (AbstractDungeon.actNum < 4) {
+    //         elitesAndBosses.addAll(BaseGameConstants.elitesAndBossesByAct.get(AbstractDungeon.actNum + 1));
+    //     }
+    //     long end = System.currentTimeMillis();
 
-        new Thread(() -> {
-            getPercentiles(cardPool, playerCards, playerRelics, startingHealth, maxHealth, elitesAndBosses);
-        }).start();
+    //     new Thread(() -> {
+    //         getPercentiles(cardPool, playerCards, playerRelics, startingHealth, maxHealth, elitesAndBosses);
+    //     }).start();
 
-        logger.info("Percentiles set up time: " + (end - start));
-    }
+    //     logger.info("Percentiles set up time: " + (end - start));
+    // }
 
     public static void getPercentiles(List<AbstractCard> cardPool, List<AbstractCard> playerCards, List<AbstractRelic> playerRelics, int startingHealth, int maxHealth, Set<String> enemies) {
         // Create skip

@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>fightpredictor</groupId>
-  <artifactId>FightPredictor</artifactId>
-  <name>Slay-I</name>
-  <version>1.0.3</version>
+  <artifactId>MyFightPredictor</artifactId>
+  <name>Slay-I-But-Not</name>
+  <version>1.0.4</version>
   <description>Uses machine learning to predict the outcome of fights. Evaluates cards using average damaged saved in a fight, weighted more heavily towards bosses and elites</description>
   <build>
     <resources>
@@ -72,7 +72,7 @@
     <repository>
       <snapshots />
       <id>tensorflow-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
   <dependencies>
@@ -97,12 +97,19 @@
       <scope>system</scope>
       <systemPath>${Steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>1.5.6</version>
+      <scope>system</scope>
+      <systemPath>/home/sky/Desktop/javacppfiles/javacpp-presets-platform-1.5.6-bin/javacpp.jar</systemPath>
+    </dependency>
   </dependencies>
   <properties>
     <ModTheSpire.version>3.8.0</ModTheSpire.version>
-    <Steam.path>C:/Program Files (x86)/Steam/steamapps</Steam.path>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <SlayTheSpire.version>01-27-2020</SlayTheSpire.version>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <Steam.path>${basedir}/../../../.steam/debian-installation/steamapps/</Steam.path>
+    <SlayTheSpire.version>01-27-2020</SlayTheSpire.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
 </project>

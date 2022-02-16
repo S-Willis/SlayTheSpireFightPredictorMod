@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fightpredictor</groupId>
-    <artifactId>FightPredictor</artifactId>
-    <name>Slay-I</name>
+    <artifactId>MyFightPredictor</artifactId>
+    <name>Slay-I-But-Not</name>
     <version>1.0.4</version>
     <description>Uses machine learning to predict the outcome of fights. Evaluates cards using average damaged saved in a fight, weighted more heavily towards bosses and elites</description>
 
@@ -11,13 +11,13 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <SlayTheSpire.version>01-27-2020</SlayTheSpire.version>
         <ModTheSpire.version>3.8.0</ModTheSpire.version>
-        <Steam.path>C:/Program Files (x86)/Steam/steamapps</Steam.path>
+        <Steam.path>${basedir}/../../../.steam/debian-installation/steamapps/</Steam.path>
     </properties>
 
     <repositories>
         <repository>
             <id>tensorflow-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -60,6 +60,13 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>3.12.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.5.6</version>
+            <scope>system</scope>
+            <systemPath>/home/sky/Desktop/javacppfiles/javacpp.jar</systemPath>
         </dependency>
     </dependencies>
 
